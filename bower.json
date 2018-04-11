@@ -3,12 +3,18 @@
   "description": "A WYSIWYG element for editing rich text.",
   "main": "mtz-wysiwyg-editor.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0"
+    "polymer": "Polymer/polymer#^2.0.0",
+    "wysiwyg-e": "miztroh/wysiwyg-e#master",
+    "paper-tabs": "PolymerElements/paper-tabs#^2.1.0",
+    "iron-pages": "PolymerElements/iron-pages#^2.1.0",
+    "juicy-ace-editor": "jay8t6/juicy-ace-editor#^2.0.6"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
+    "paper-button": "PolymerElements/paper-button#^2.1.0",
+    "paper-input": "PolymerElements/paper-input#^2.2.2"
   },
   "resolutions": {
     "polymer": "^2.0.0"
