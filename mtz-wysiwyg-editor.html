@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="mtz-wysiwyg-editor">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * `mtz-wysiwyg-editor`
+     * A WYSIWYG element for editing rich text.
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class MtzWysiwygEditor extends Polymer.Element {
+      static get is() { return 'mtz-wysiwyg-editor'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'mtz-wysiwyg-editor'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(MtzWysiwygEditor.is, MtzWysiwygEditor);
+  </script>
+</dom-module>
