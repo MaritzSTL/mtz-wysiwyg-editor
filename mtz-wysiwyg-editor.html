@@ -28,14 +28,14 @@
       :host {
         display: block;
         border: 1px solid #CCCCCC;
-        --paper-tab-ink: #0568ae;
+        --paper-tab-ink: #0568AE;
         --paper-tabs-selection-bar-color: #2A9AF2;
         --paper-tabs-selection-bar: {
           border-bottom: 4px solid var(--paper-tabs-selection-bar-color);
         };
         --paper-tab-content-unselected: {
-          color: gray;
-          border-bottom: solid 3px gray;
+          color: #808080;
+          border-bottom: solid 3px #808080;
         };
         --paper-tab: {
           padding: 0;
@@ -98,17 +98,37 @@
         return {
           value: {
             type: String,
-            notify: true
+            notify: true,
           },
-          editorValue: String,
+          editorValue: {
+            type: String,
+            observer: '__editorValueChanged',
+          },
           inputValue: String,
           selected: {
             type: Number,
             value: 0,
-            observer: '__setValue'
-          }
+            observer: '__setValue',
+          },
         };
       }
+
+      /**
+       * dispatch an event on editor's value changes
+       */
+      __editorValueChanged() {
+        this.dispatchEvent(new CustomEvent('editor-value-changed', {
+          composed: true,
+        }));
+      }
+
+      /**
+       * clear editor by setting a blank value
+       */
+      clearEditor() {
+        this.editorValue = '';
+      }
+
       /**
        * insert text into html editor after adding focus
        * @param {String} html
@@ -117,6 +137,7 @@
         this.$.editor.focus();
         this.$.editor.insertText(html);
       }
+
       /**
        * set source code editor's value and html editor's value on tab change
        * @param {Number} selected
@@ -128,6 +149,7 @@
           this.sourceValue = this.editorValue;
         }
       }
+
       /**
        * set source code editor's value on change
        * @param {CustomEvent} e
