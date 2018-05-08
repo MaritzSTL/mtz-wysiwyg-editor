@@ -1,0 +1,59 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="../../paper-input/paper-input.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+
+<link rel="import" href="../mtz-wysiwyg-editor.html">
+
+<dom-module id="mtz-wysiwyg-editor-demo">
+  <template>
+    <style>
+      :host {
+        display: block;
+        width: 860px;
+      }
+      .row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      paper-input {
+        width: 450px;
+        margin-right: 10px;
+      }
+    </style>
+    <div class="row">
+      <paper-input value="{{inputValue}}"></paper-input>
+      <paper-button raised on-click="__insertText">Insert Text</paper-button>
+    </div>
+    <mtz-wysiwyg-editor id="editor" value="[[value]]"></mtz-wysiwyg-editor>
+  </template>
+  <script>
+    /**
+     * `mtz-wysiwyg-editor-demo`
+     * A WYSIWYG element for editing rich text.
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class MtzWysiwygEditorDemo extends Polymer.Element {
+      static get is() {
+        return 'mtz-wysiwyg-editor-demo';
+      }
+      static get properties() {
+        return {
+          inputValue: String,
+          value: {
+            type: String,
+            value: '<h3>You\'re on mtz-wysiwyg-editor demo!</h3>'
+          }
+        };
+      }
+      __insertText() {
+        this.$.editor.insertText(this.inputValue);
+      }
+    }
+
+    window.customElements.define(MtzWysiwygEditorDemo.is, MtzWysiwygEditorDemo);
+  </script>
+</dom-module>

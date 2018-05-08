@@ -1,13 +1,84 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-pages/iron-pages.html">
+<link rel="import" href="../paper-tabs/paper-tabs.html">
+<link rel="import" href="../juicy-ace-editor/juicy-ace-editor.html">
+<!-- Import this to use the editor.  You'll want at least one of the tools below -->
+<link rel="import" href="../wysiwyg-e/wysiwyg-e.html">
+<!-- Import one or more of the following tools -->
+<link rel="import" href="../wysiwyg-e/tools/bold.html">
+<link rel="import" href="../wysiwyg-e/tools/italic.html">
+<link rel="import" href="../wysiwyg-e/tools/underline.html">
+<link rel="import" href="../wysiwyg-e/tools/strike.html">
+<link rel="import" href="../wysiwyg-e/tools/color.html">
+<link rel="import" href="../wysiwyg-e/tools/clear.html">
+<link rel="import" href="../wysiwyg-e/tools/code.html">
+<link rel="import" href="../wysiwyg-e/tools/link.html">
+<link rel="import" href="../wysiwyg-e/tools/image.html">
+<link rel="import" href="../wysiwyg-e/tools/ordered.html">
+<link rel="import" href="../wysiwyg-e/tools/unordered.html">
+<link rel="import" href="../wysiwyg-e/tools/indent.html">
+<link rel="import" href="../wysiwyg-e/tools/outdent.html">
+<link rel="import" href="../wysiwyg-e/tools/justify.html">
+<link rel="import" href="../wysiwyg-e/tools/heading.html">
+<link rel="import" href="../wysiwyg-e/tools/blockquote.html">
 
 <dom-module id="mtz-wysiwyg-editor">
   <template>
     <style>
       :host {
         display: block;
+        border: 1px solid #CCCCCC;
+        --paper-tab-ink: #0568AE;
+        --paper-tabs-selection-bar-color: #2A9AF2;
+        --paper-tabs-selection-bar: {
+          border-bottom: 4px solid var(--paper-tabs-selection-bar-color);
+        };
+        --paper-tab-content-unselected: {
+          color: #808080;
+          border-bottom: solid 3px #808080;
+        };
+        --paper-tab: {
+          padding: 0;
+        };
+      }
+      wysiwyg-e, juicy-ace-editor {
+        width: 860px;
+        height: 450px;
+        @apply --editor-styles;
       }
     </style>
-    <h2>Hello [[prop1]]!</h2>
+    <paper-tabs selected="{{selected}}" noink>
+      <paper-tab>HTML Editor</paper-tab>
+      <paper-tab>View Source</paper-tab>
+    </paper-tabs>
+    <iron-pages selected="[[selected]]">
+      <wysiwyg-e id="editor" value="{{editorValue}}">
+        <wysiwyg-tool-bold></wysiwyg-tool-bold>
+        <wysiwyg-tool-italic></wysiwyg-tool-italic>
+        <wysiwyg-tool-underline></wysiwyg-tool-underline>
+        <wysiwyg-tool-strike></wysiwyg-tool-strike>
+        <wysiwyg-tool-color></wysiwyg-tool-color>
+        <wysiwyg-tool-clear></wysiwyg-tool-clear>
+        <wysiwyg-tool-code></wysiwyg-tool-code>
+        <wysiwyg-tool-link></wysiwyg-tool-link>
+        <wysiwyg-tool-image></wysiwyg-tool-image>
+        <wysiwyg-tool-ordered></wysiwyg-tool-ordered>
+        <wysiwyg-tool-unordered></wysiwyg-tool-unordered>
+        <wysiwyg-tool-indent></wysiwyg-tool-indent>
+        <wysiwyg-tool-outdent></wysiwyg-tool-outdent>
+        <wysiwyg-tool-justify right center full></wysiwyg-tool-justify>
+        <wysiwyg-tool-heading h1 h2 h3 h4 h5 h6></wysiwyg-tool-heading>
+        <wysiwyg-tool-blockquote></wysiwyg-tool-blockquote>
+      </wysiwyg-e>
+      <juicy-ace-editor
+        wrapmode
+        fontsize="16px"
+        theme="ace/theme/monokai"
+        mode="ace/mode/html"
+        value="[[sourceValue]]"
+        on-change="__setSourceValue">
+      </juicy-ace-editor>
+    </iron-pages>
   </template>
 
   <script>
@@ -20,14 +91,71 @@
      * @demo demo/index.html
      */
     class MtzWysiwygEditor extends Polymer.Element {
-      static get is() { return 'mtz-wysiwyg-editor'; }
+      static get is() {
+        return 'mtz-wysiwyg-editor';
+      }
       static get properties() {
         return {
-          prop1: {
+          value: {
             type: String,
-            value: 'mtz-wysiwyg-editor'
-          }
+            notify: true,
+          },
+          editorValue: {
+            type: String,
+            observer: '__editorValueChanged',
+          },
+          inputValue: String,
+          selected: {
+            type: Number,
+            value: 0,
+            observer: '__setValue',
+          },
         };
+      }
+
+      /**
+       * dispatch an event on editor's value changes
+       */
+      __editorValueChanged() {
+        this.dispatchEvent(new CustomEvent('editor-value-changed', {
+          composed: true,
+        }));
+      }
+
+      /**
+       * clear editor by setting a blank value
+       */
+      clearEditor() {
+        this.editorValue = '';
+      }
+
+      /**
+       * insert text into html editor after adding focus
+       * @param {String} html
+       */
+      insertText(html) {
+        this.$.editor.focus();
+        this.$.editor.insertText(html);
+      }
+
+      /**
+       * set source code editor's value and html editor's value on tab change
+       * @param {Number} selected
+       */
+      __setValue(selected) {
+        if (selected === 0) {
+          this.editorValue = this.value;
+        } else {
+          this.sourceValue = this.editorValue;
+        }
+      }
+
+      /**
+       * set source code editor's value on change
+       * @param {CustomEvent} e
+       */
+      __setSourceValue(e) {
+        this.set('value', e.detail.value);
       }
     }
 
